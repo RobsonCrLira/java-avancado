@@ -3,7 +3,6 @@ package processsamentoAssincronoParalelo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,17 +11,26 @@ public class FutureExemplo {
 
     public static void main(String[] args) {
         Casa casa = new Casa(new Quarto());
-        casa.obterAfazeresDaCasa().forEach( atividade -> pessoasParaExecutarAtividade.execute(atividade::realizar));
+        casa.obterAfazeresDaCasa().forEach( atividade -> pessoasParaExecutarAtividade.execute(() ->  {
+            try {
+                atividade.realizar();
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }));
+
+
+
         pessoasParaExecutarAtividade.shutdown();
     }
 }
 
 class Casa{
-    private List<Comodo> comodos;
+    private final List<Comodo> comodos;
 
     Casa(Comodo... comodos)
     {
-        this.comodos = Arrays.asList((comodos));
+        this.comodos = Arrays.asList(comodos);
     }
 
     List<Atividade> obterAfazeresDaCasa(){
@@ -35,7 +43,7 @@ class Casa{
 }
 
 interface Atividade{
-    void realizar();
+    void realizar() throws InterruptedException;
 }
 
 abstract class Comodo{
@@ -52,16 +60,18 @@ class Quarto extends Comodo{
         );
     }
 
-    private void arrumarGuardaRoupas() {
-
+    private void arrumarGuardaRoupas () throws InterruptedException {
+        Thread.sleep(5000);
         System.out.println("Arrumar o Guarda Roupa");
     }
 
-    private void varrerOQuarto() {
+    private void varrerOQuarto() throws InterruptedException {
+        Thread.sleep(5000);
         System.out.println("Varrer o Quarto");
     }
 
-    private void arrumarACama() {
+    private void arrumarACama() throws InterruptedException {
+        Thread.sleep(5000);
         System.out.println("Arrumar A Cama");
     }
 }
