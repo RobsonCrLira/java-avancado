@@ -1,5 +1,7 @@
 package interfacesFuncionais;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -9,7 +11,22 @@ public class Interacoes {
         Integer[] numeros = {1,2,3,4,5,6};
 //        imprimeNomesFiltrados(nomes);
 //        imprimeTodos(nomes);
-        imprimeDobro(numeros);
+//        imprimeDobro(numeros);
+
+        List<String> profissoes  = new ArrayList<>();
+        profissoes.add("Developer");
+        profissoes.add("Developer Junior");
+        profissoes.add("Developer Pleno");
+        profissoes.add("Developer Senior");
+        profissoes.add("Developer Especialista");
+        profissoes.add("Tester");
+        profissoes.add("QA");
+        profissoes.add("PO");
+
+        profissoes.stream()
+                .filter(profissao -> profissao.startsWith("Dev  "))
+                .forEach(System.out::println);
+
     }
 
     public static void imprimeNomesFiltrados(String... nomes){
